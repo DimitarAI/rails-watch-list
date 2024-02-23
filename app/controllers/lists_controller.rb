@@ -1,5 +1,5 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [:show]
+  before_action :set_list, only: [:show, :destroy]
 
   def index
     @lists = List.all
@@ -21,6 +21,11 @@ class ListsController < ApplicationController
     end
   end
 
+  def destroy
+    @list.destroy
+    redirect_to lists_url, notice: 'List was successfully destroyed.'
+  end
+
   private
 
   def set_list
@@ -28,6 +33,6 @@ class ListsController < ApplicationController
   end
 
   def list_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, :image, bookmarks_attributes: [:movie_id, :comment])
   end
 end

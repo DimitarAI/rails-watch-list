@@ -1,5 +1,15 @@
 <h1>Movie Lists</h1>
-<%= link_to 'New Movie List', new_list_path %>
+
+<%= link_to 'New List', new_list_path %>
+
 <% @lists.each do |list| %>
-  <h2><%= link_to list.name, list %></h2>
+  <div>
+    <h2><%= link_to list.name, list %></h2>
+
+    <% if list.image.attached? %>
+      <%= image_tag list.image.variant(resize: "100x100") %>
+    <% else %>
+      <p>No image attached</p>
+    <% end %>
+  </div>
 <% end %>

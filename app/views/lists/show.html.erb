@@ -1,12 +1,34 @@
 <h1><%= @list.name %></h1>
-<%= link_to 'Add Movie to List', new_list_bookmark_path(@list) %>
-<% @list.movies.each do |movie| %>
-  <h2><%= movie.title %></h2>
+<h1><%= @list.name %> <%= link_to 'Delete List', list_path(@list), method: :delete, data: { confirm: 'Are you sure?' } %></h1>
+
+<% if @list.image.attached? %>
+  <%= image_tag @list.image.variant(resize: "500x500") %>
+<% else %>
+  <p>No image attached</p>
 <% end %>
+
+<h2>Movies:</h2>
+<% @list.movies.each do |movie| %>
+  <p><%= movie.title %></p>
+<% end %>
+
+<h2>Add a new movie to this list:</h2>
+<%= form_for [@list, @list.bookmarks.build] do |f| %>
+  <%= f.label :movie_id, "Select a movie" %>
+  <%= f.collection_select :movie_id, Movie.all, :id, :title %>
+  <%= f.label :comment, "Add a comment" %>
+  <%= f.text_area :comment %>
+  <%= f.submit "Add Movie" %>
+<% end %>
+
 
 <% @list.bookmarks.each do |bookmark| %>
   <p>
-    <%= bookmark.movie.title %>
-    <%= link_to 'Delete', bookmark_path(bookmark), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+    <% if bookmark.movie %>
+      <%= bookmark.movie.title %>
+      <%= link_to 'Delete', bookmark_path(bookmark), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+    <% else %>
+      <p>This bookmark has no associated movie.</p>
+    <% end %>
   </p>
 <% end %>
